@@ -1,154 +1,142 @@
-🚀 ToDo App
-====================================================
+# 🚀 GetDone — Modern Kanban Productivity Suite
 
-Live Demo: https://www.getdone.online
+<p align="center">
+  <b>Streamline your workflow. Master your time. Get things done.</b>
+</p>
 
+<p align="center">
+  <a href="https://getdone.online">🌐 Live Demo</a> •
+  <a href="https://github.com/alexkuznecov16/Task-Manager">📦 Repository</a>
+</p>
 
-----------------------------------------------------
-📌 About the Project
-----------------------------------------------------
+---
 
-ToDo App is a modern single-board task management application built with React (Vite) and powered by Supabase.
+## 🌟 Overview
 
-The application allows users to securely register, log in, create columns, manage tasks, and store all data in a cloud PostgreSQL database.
+**GetDone** is a modern, minimalist Kanban productivity app built for speed, clarity, and focus.
 
-Each user has isolated access to their own data.
+Designed with a **mobile‑first philosophy**, it delivers a seamless experience across desktop and mobile with real‑time synchronization and secure cloud storage.
 
+Perfect for:
 
-----------------------------------------------------
-✨ Features
-----------------------------------------------------
+- Developers  
+- Students  
+- Freelancers  
+- Teams  
+- Anyone who wants to stay organized  
 
-✔ Secure Authentication (Sign Up / Login)
-✔ Email confirmation required after registration
-✔ Editable user profile (name & email)
-✔ Single Board structure (one board per user)
-✔ Create / Edit / Delete columns
-✔ Create / Edit / Delete tasks
-✔ Mark tasks as completed
-✔ Modern responsive UI
-✔ Live date & time in header
-✔ Horizontal scrollable board
-✔ Data stored securely in Supabase
+---
 
+## ✨ Features
 
-----------------------------------------------------
-🔐 Authentication Flow
-----------------------------------------------------
+- 🔐 Secure authentication (Supabase Auth)  
+- ☁️ Real‑time cloud sync  
+- 📂 Kanban workflow management  
+- 🏷 Custom tags with colors  
+- ⚡ Fast and responsive UI  
+- 🎨 Modern clean interface  
+- 🛡 Secure database with Row‑Level Security  
+- 📱 Fully responsive design  
 
-1. User registers with:
-   - Name
-   - Email
-   - Password
+---
 
-2. Supabase sends a confirmation email.
-3. User must confirm the email via the provided link.
-4. After confirmation, the user can log in and access the application.
+## 🛠 Tech Stack
 
-All authentication is securely handled by Supabase.
+| Layer    | Technology       |
+|----------|------------------|
+| Frontend | React 18 + Vite |
+| Backend  | Supabase        |
+| Database | PostgreSQL      |
+| Auth     | Supabase Auth   |
+| Styling  | Modern CSS      |
+| UX       | NProgress       |
 
+---
 
-----------------------------------------------------
-🛠 Tech Stack
-----------------------------------------------------
+## 🗄 Architecture
 
-Frontend:
-- React
-- Vite
-- Modern CSS
+GetDone uses a secure and scalable architecture powered by Supabase and PostgreSQL.
 
-Backend / Database:
-- Supabase
-- PostgreSQL
-- Supabase Auth
+Core concepts:
 
+- Users own their own data  
+- Tasks belong to workflow columns  
+- Tags allow flexible organization  
+- Real‑time sync across devices  
+- Secure access via Row‑Level Security  
 
-----------------------------------------------------
-🗄 Database Structure
-----------------------------------------------------
+See full schema diagram:
 
-Table: columns
-- id
-- title
-- order
-- board_id
-- user_id
+![Database Schema](public/database-schema.png)
 
-Table: tasks
-- id
-- title
-- completed
-- order
-- column_id
-- user_id
+---
 
-Row Level Security (RLS) is enabled to ensure users can only access their own data.
+## 🚀 Getting Started
 
+### Clone repository
 
-----------------------------------------------------
-⚙️ Installation
-----------------------------------------------------
+```bash
+git clone https://github.com/alexkuznecov16/Task-Manager.git
+cd Task-Manager
+```
 
-1. Clone the repository:
+### Install dependencies
 
-   git clone https://github.com/alexkuznecov16/ToDo-App.git
-   cd todo-app
+```bash
+npm install
+```
 
-2. Install dependencies:
+### Setup environment
 
-   npm install
+Create `.env` file:
 
-3. Configure Supabase (src/supabase.js):
+```env
+VITE_SUPABASE_URL=your_url
+VITE_SUPABASE_KEY=your_key
+```
 
-   import { createClient } from '@supabase/supabase-js'
+### Run app
 
-   const supabaseUrl = 'https://YOUR_PROJECT_ID.supabase.co'
-   const supabaseKey = 'YOUR_PUBLIC_ANON_KEY'
+```bash
+npm run dev
+```
 
-   export const supabase = createClient(supabaseUrl, supabaseKey)
+---
 
-4. Run the project:
+## 🌐 Live Demo
 
-   npm run dev
+https://getdone.online
 
+---
 
-----------------------------------------------------
-🎨 UI Highlights
-----------------------------------------------------
+## 🤝 Contributing
 
-- Sticky modern header
-- Real-time date and clock
-- Glass-style columns
-- Smooth animations
-- Fully responsive layout
-- Horizontal scroll support for multiple columns
+Contributions are welcome.
 
+If you'd like to improve GetDone:
 
-----------------------------------------------------
-🚧 Future Improvements
-----------------------------------------------------
+- Fork the repository  
+- Create a feature branch  
+- Submit a Pull Request  
 
-- Drag & Drop task reordering
-- Column drag & drop
-- Real-time updates
-- Task deadlines
-- Dark / Light theme toggle
+---
 
+## 📄 License
 
-----------------------------------------------------
-👨‍💻 Author
-----------------------------------------------------
+This project is open source and available under the MIT License.
 
-Alexander Kuznetsov
+---
 
-Telegram: @kznws111
-Email: alexander.kuznecov16@gmail.com
+## 👨‍💻 Author
 
+Alexander Kuznecov
 
-----------------------------------------------------
-🌐 Live Website
-----------------------------------------------------
+- Telegram: https://t.me/kznws111  
+- Email: alexander.kuznecov16@gmail.com  
 
-https://to-do-app-murex-nine.vercel.app
+---
 
-====================================================
+<p align="center">
+  Built with passion for productivity.
+</p>
+

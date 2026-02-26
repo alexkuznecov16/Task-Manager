@@ -1,0 +1,79 @@
+/* ===== BUTTONS ===== */
+
+button {
+  border: none;
+  border-radius: 12px;
+  padding: 10px 14px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+button:hover:not(.deleting-modal-content button) {
+  transform: translateY(-2px);
+}
+
+.column button.btn_remove-column {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 40px;
+  height: 40px;
+  background: none;
+  border: none;
+  color: #ff4d4d;
+  font-size: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.column button:not(.btn_remove-column) {
+  width: 100%;
+  background: #6366f1;
+  color: white;
+  font-size: 14px;
+}
+
+.column
+  button:hover:not(.btn_remove-column):not(.deleting-modal-content button) {
+  background: #4f46e5;
+}
+
+/* ===== ADD COLUMN BUTTON ===== */
+
+.add-column {
+  flex: 0 0 260px;
+  height: 60px;
+  background: #1e293b;
+  color: #f1f5f9;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.add-column:hover {
+  background: #334155;
+  border-color: #6366f1;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+}
+
+/* ===== DELETE ===== */
+
+.task .delete-btn {
+  background: #f87171;
+  color: #000;
+}
+
+.delete-btn:hover {
+  color: #000;
+  background: #f87171 !important;
+}

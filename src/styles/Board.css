@@ -1,0 +1,31 @@
+/* ===== BOARD WRAPPER ===== */
+
+.board-wrapper {
+  margin: 100px 0 0 0;
+  flex: 1;
+  width: 100%;
+  height: calc(100vh - 100px);
+  overflow-y: hidden;
+  overflow-x: auto;
+  touch-action: pan-x;
+  -webkit-overflow-scrolling: touch;
+  cursor: grab;
+}
+
+.board-wrapper:active {
+  cursor: grabbing;
+}
+
+/* ===== BOARD ===== */
+
+.board {
+  padding: 20px 25px 0 25px !important;
+  display: flex;
+  gap: 28px;
+  width: max-content;
+  height: 100%;
+  min-width: 100%;
+  align-items: flex-start;
+  overflow: visible;
+  scroll-behavior: smooth;
+}

@@ -1,56 +1,44 @@
 # 🚀 GetDone --- Modern Kanban Productivity Suite
 
-```{=html}
-<p align="center">
-```
-`<b>`{=html}Streamline your workflow. Master your time. Get things
-done.`</b>`{=html}
-```{=html}
-</p>
-```
+**Streamline your workflow. Master your time. Get things done.**
 
 ------------------------------------------------------------------------
 
 ## 🌟 Overview
 
-**GetDone** is a high-performance, minimalist Kanban-style task manager
-designed for modern professionals. Built with a "Mobile-First"
-philosophy, it offers a seamless experience from desktop to smartphone,
-ensuring your productivity never hits a bottleneck.
+**GetDone** is a high‑performance, minimalist Kanban‑style task manager
+designed for modern professionals. Built with a **Mobile‑First
+philosophy**, it delivers a seamless experience across desktop and
+mobile devices.
 
 ------------------------------------------------------------------------
 
 ## ✨ Key Features
 
--   🔐 **Secure Ecosystem**: Enterprise-grade authentication via Email,
-    Google, and Discord using Supabase Auth.
--   ☁️ **Live Cloud Sync**: Instant data persistence with a managed
-    PostgreSQL backend.
--   🏷 **Pro Tagging System**: Organize tasks with a custom-colored
-    tagging engine (up to 8 unique tags per user).
--   🕒 **Real-Time Dashboard**: Integrated live clock and date tracking
-    for precise time management.
--   🎨 **Glassmorphism UI**: Beautiful, responsive interface with smooth
-    CSS transitions and native-feel animations.
--   🛡 **RLS Protected**: Robust Row-Level Security ensuring your data is
-    private and encrypted.
+-   🔐 **Secure Authentication** --- Email, Google, and Discord via
+    Supabase Auth\
+-   ☁️ **Cloud Sync** --- Real‑time PostgreSQL database persistence\
+-   🏷 **Tagging System** --- Custom color tags (up to 8 per user)\
+-   🕒 **Live Dashboard** --- Real‑time clock and date tracking\
+-   🎨 **Modern UI** --- Glassmorphism design with smooth animations\
+-   🛡 **Row‑Level Security (RLS)** --- Full data privacy and protection
 
 ------------------------------------------------------------------------
 
 ## 🛠 Tech Stack
 
-  Layer          Technology
-  -------------- -----------------------------------------
-  **Frontend**   React 18 + Vite
-  **Backend**    Supabase (BaaS)
-  **Database**   PostgreSQL
-  **UX/UI**      Modern CSS + NProgress (Loading states)
+  Layer      Technology
+  ---------- ------------------------
+  Frontend   React 18 + Vite
+  Backend    Supabase
+  Database   PostgreSQL
+  UI/UX      Modern CSS + NProgress
 
 ------------------------------------------------------------------------
 
 ## 🚀 Installation & Setup
 
-### 1. Clone the project
+### 1. Clone repository
 
 ``` bash
 git clone https://github.com/alexkuznecov16/Task-Manager.git
@@ -63,16 +51,16 @@ cd Task-Manager
 npm install
 ```
 
-### 3. Environment Configuration
+### 3. Configure environment
 
-Create a `.env` file in the root directory:
+Create `.env` file in root:
 
 ``` env
 VITE_SUPABASE_URL=your_supabase_project_url
 VITE_SUPABASE_KEY=your_supabase_anon_key
 ```
 
-### 4. Launch Development Server
+### 4. Run development server
 
 ``` bash
 npm run dev
@@ -82,29 +70,27 @@ npm run dev
 
 ## 🗄 Database Architecture
 
-The application architecture is built on three core relational pillars:
+Core entities:
 
--   **Columns** --- Dynamic stage management (Backlog ➔ Doing ➔ Done)
--   **Tasks** --- Rich data objects containing descriptions, tags, and
-    deadlines
--   **Tags** --- User-defined metadata linked via `user_id` for
-    personalized sorting
+-   **Columns** --- Workflow stages (Backlog → Doing → Done)
+-   **Tasks** --- Task content, tags, deadlines
+-   **Tags** --- User‑specific labels
 
 ------------------------------------------------------------------------
 
-## 🚧 Roadmap (Coming Soon)
+## 🚧 Roadmap
 
--   [ ] 🔄 Drag & Drop: Native interactive reordering\
--   [ ] 🌙 Dark Mode: Optimized UI for late-night deep work\
--   [ ] 🔔 Deadlines 2.0: Email and Browser push notifications\
--   [ ] 📊 Analytics: Productivity charts and completion heatmaps
+-   [ ] Drag & Drop support\
+-   [ ] Dark Mode\
+-   [ ] Notifications (Email + Browser)\
+-   [ ] Analytics dashboard
 
 ------------------------------------------------------------------------
 
 ## 👨‍💻 Author
 
 **Alexander Kuznetsov**\
-Full-Stack Developer \| Open-Source Contributor
+Full‑Stack Developer
 
 -   Telegram: https://t.me/kznws111\
 -   Email: alexander.kuznecov16@gmail.com\
@@ -112,11 +98,4 @@ Full-Stack Developer \| Open-Source Contributor
 
 ------------------------------------------------------------------------
 
-```{=html}
-<p align="center">
-```
-`<i>`{=html}"Success is the sum of small efforts, repeated day in and
-day out."`</i>`{=html}
-```{=html}
-</p>
-```
+> Success is the sum of small efforts, repeated day in and day out.

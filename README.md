@@ -1,66 +1,114 @@
 # 🚀 GetDone --- Modern Kanban Productivity Suite
 
-**Streamline your workflow. Master your time. Get things done.**
+```{=html}
+<p align="center">
+```
+`<b>`{=html}Streamline your workflow. Master your time. Get things
+done.`</b>`{=html}
+```{=html}
+</p>
+```
+```{=html}
+<p align="center">
+```
+`<a href="https://getdone.online">`{=html}🌐 Live Demo`</a>`{=html} •
+`<a href="https://github.com/alexkuznecov16/Task-Manager">`{=html}📦
+Repository`</a>`{=html}
+```{=html}
+</p>
+```
 
 ------------------------------------------------------------------------
 
 ## 🌟 Overview
 
-**GetDone** is a high‑performance, minimalist Kanban‑style task manager
-designed for modern professionals. Built with a **Mobile‑First
-philosophy**, it delivers a seamless experience across desktop and
-mobile devices.
+**GetDone** is a modern, minimalist Kanban productivity app built for
+speed, clarity, and focus.
+
+Designed with a **mobile‑first philosophy**, it delivers a seamless
+experience across desktop and mobile with real‑time synchronization and
+secure cloud storage.
+
+Perfect for:
+
+-   Developers
+-   Students
+-   Freelancers
+-   Teams
+-   Anyone who wants to stay organized
 
 ------------------------------------------------------------------------
 
-## ✨ Key Features
+## ✨ Features
 
--   🔐 **Secure Authentication** --- Email, Google, and Discord via
-    Supabase Auth\
--   ☁️ **Cloud Sync** --- Real‑time PostgreSQL database persistence\
--   🏷 **Tagging System** --- Custom color tags (up to 8 per user)\
--   🕒 **Live Dashboard** --- Real‑time clock and date tracking\
--   🎨 **Modern UI** --- Glassmorphism design with smooth animations\
--   🛡 **Row‑Level Security (RLS)** --- Full data privacy and protection
+-   🔐 Secure authentication (Supabase Auth)
+-   ☁️ Real‑time cloud sync
+-   📂 Kanban workflow management
+-   🏷 Custom tags with colors
+-   ⚡ Fast and responsive UI
+-   🎨 Modern clean interface
+-   🛡 Secure database with Row‑Level Security
+-   📱 Fully responsive design
 
 ------------------------------------------------------------------------
 
 ## 🛠 Tech Stack
 
   Layer      Technology
-  ---------- ------------------------
+  ---------- -----------------
   Frontend   React 18 + Vite
   Backend    Supabase
   Database   PostgreSQL
-  UI/UX      Modern CSS + NProgress
+  Auth       Supabase Auth
+  Styling    Modern CSS
+  UX         NProgress
 
 ------------------------------------------------------------------------
 
-## 🚀 Installation & Setup
+## 🗄 Architecture
 
-### 1. Clone repository
+GetDone uses a secure and scalable architecture powered by Supabase and
+PostgreSQL.
+
+Core concepts:
+
+-   Users own their own data
+-   Tasks belong to workflow columns
+-   Tags allow flexible organization
+-   Real‑time sync across devices
+-   Secure access via Row‑Level Security
+
+See full schema diagram:
+
+![Database Schema](public/database-schema.png)
+
+------------------------------------------------------------------------
+
+## 🚀 Getting Started
+
+### Clone repository
 
 ``` bash
 git clone https://github.com/alexkuznecov16/Task-Manager.git
 cd Task-Manager
 ```
 
-### 2. Install dependencies
+### Install dependencies
 
 ``` bash
 npm install
 ```
 
-### 3. Configure environment
+### Setup environment
 
-Create `.env` file in root:
+Create `.env` file:
 
 ``` env
-VITE_SUPABASE_URL=your_supabase_project_url
-VITE_SUPABASE_KEY=your_supabase_anon_key
+VITE_SUPABASE_URL=your_url
+VITE_SUPABASE_KEY=your_key
 ```
 
-### 4. Run development server
+### Run app
 
 ``` bash
 npm run dev
@@ -68,34 +116,43 @@ npm run dev
 
 ------------------------------------------------------------------------
 
-## 🗄 Database Architecture
+## 🌐 Live Demo
 
-Core entities:
-
--   **Columns** --- Workflow stages (Backlog → Doing → Done)
--   **Tasks** --- Task content, tags, deadlines
--   **Tags** --- User‑specific labels
+https://getdone.online
 
 ------------------------------------------------------------------------
 
-## 🚧 Roadmap
+## 🤝 Contributing
 
--   [ ] Drag & Drop support\
--   [ ] Dark Mode\
--   [ ] Notifications (Email + Browser)\
--   [ ] Analytics dashboard
+Contributions are welcome.
+
+If you'd like to improve GetDone:
+
+-   Fork the repository
+-   Create a feature branch
+-   Submit a Pull Request
+
+------------------------------------------------------------------------
+
+## 📄 License
+
+This project is open source and available under the MIT License.
 
 ------------------------------------------------------------------------
 
 ## 👨‍💻 Author
 
-**Alexander Kuznetsov**\
-Full‑Stack Developer
+Alexander Kuznecov
 
--   Telegram: https://t.me/kznws111\
--   Email: alexander.kuznecov16@gmail.com\
--   Live Demo: https://getdone.online
+-   Telegram: https://t.me/kznws111
+-   Email: alexander.kuznecov16@gmail.com
 
 ------------------------------------------------------------------------
 
-> Success is the sum of small efforts, repeated day in and day out.
+```{=html}
+<p align="center">
+```
+Built with passion for productivity.
+```{=html}
+</p>
+```

@@ -1,154 +1,122 @@
-🚀 ToDo App
-====================================================
+# 🚀 GetDone --- Modern Kanban Productivity Suite
 
-Live Demo: https://www.getdone.online
+```{=html}
+<p align="center">
+```
+`<b>`{=html}Streamline your workflow. Master your time. Get things
+done.`</b>`{=html}
+```{=html}
+</p>
+```
 
+------------------------------------------------------------------------
 
-----------------------------------------------------
-📌 About the Project
-----------------------------------------------------
+## 🌟 Overview
 
-ToDo App is a modern single-board task management application built with React (Vite) and powered by Supabase.
+**GetDone** is a high-performance, minimalist Kanban-style task manager
+designed for modern professionals. Built with a "Mobile-First"
+philosophy, it offers a seamless experience from desktop to smartphone,
+ensuring your productivity never hits a bottleneck.
 
-The application allows users to securely register, log in, create columns, manage tasks, and store all data in a cloud PostgreSQL database.
+------------------------------------------------------------------------
 
-Each user has isolated access to their own data.
+## ✨ Key Features
 
+-   🔐 **Secure Ecosystem**: Enterprise-grade authentication via Email,
+    Google, and Discord using Supabase Auth.
+-   ☁️ **Live Cloud Sync**: Instant data persistence with a managed
+    PostgreSQL backend.
+-   🏷 **Pro Tagging System**: Organize tasks with a custom-colored
+    tagging engine (up to 8 unique tags per user).
+-   🕒 **Real-Time Dashboard**: Integrated live clock and date tracking
+    for precise time management.
+-   🎨 **Glassmorphism UI**: Beautiful, responsive interface with smooth
+    CSS transitions and native-feel animations.
+-   🛡 **RLS Protected**: Robust Row-Level Security ensuring your data is
+    private and encrypted.
 
-----------------------------------------------------
-✨ Features
-----------------------------------------------------
+------------------------------------------------------------------------
 
-✔ Secure Authentication (Sign Up / Login)
-✔ Email confirmation required after registration
-✔ Editable user profile (name & email)
-✔ Single Board structure (one board per user)
-✔ Create / Edit / Delete columns
-✔ Create / Edit / Delete tasks
-✔ Mark tasks as completed
-✔ Modern responsive UI
-✔ Live date & time in header
-✔ Horizontal scrollable board
-✔ Data stored securely in Supabase
+## 🛠 Tech Stack
 
+  Layer          Technology
+  -------------- -----------------------------------------
+  **Frontend**   React 18 + Vite
+  **Backend**    Supabase (BaaS)
+  **Database**   PostgreSQL
+  **UX/UI**      Modern CSS + NProgress (Loading states)
 
-----------------------------------------------------
-🔐 Authentication Flow
-----------------------------------------------------
+------------------------------------------------------------------------
 
-1. User registers with:
-   - Name
-   - Email
-   - Password
+## 🚀 Installation & Setup
 
-2. Supabase sends a confirmation email.
-3. User must confirm the email via the provided link.
-4. After confirmation, the user can log in and access the application.
+### 1. Clone the project
 
-All authentication is securely handled by Supabase.
+``` bash
+git clone https://github.com/alexkuznecov16/Task-Manager.git
+cd Task-Manager
+```
 
+### 2. Install dependencies
 
-----------------------------------------------------
-🛠 Tech Stack
-----------------------------------------------------
+``` bash
+npm install
+```
 
-Frontend:
-- React
-- Vite
-- Modern CSS
+### 3. Environment Configuration
 
-Backend / Database:
-- Supabase
-- PostgreSQL
-- Supabase Auth
+Create a `.env` file in the root directory:
 
+``` env
+VITE_SUPABASE_URL=your_supabase_project_url
+VITE_SUPABASE_KEY=your_supabase_anon_key
+```
 
-----------------------------------------------------
-🗄 Database Structure
-----------------------------------------------------
+### 4. Launch Development Server
 
-Table: columns
-- id
-- title
-- order
-- board_id
-- user_id
+``` bash
+npm run dev
+```
 
-Table: tasks
-- id
-- title
-- completed
-- order
-- column_id
-- user_id
+------------------------------------------------------------------------
 
-Row Level Security (RLS) is enabled to ensure users can only access their own data.
+## 🗄 Database Architecture
 
+The application architecture is built on three core relational pillars:
 
-----------------------------------------------------
-⚙️ Installation
-----------------------------------------------------
+-   **Columns** --- Dynamic stage management (Backlog ➔ Doing ➔ Done)
+-   **Tasks** --- Rich data objects containing descriptions, tags, and
+    deadlines
+-   **Tags** --- User-defined metadata linked via `user_id` for
+    personalized sorting
 
-1. Clone the repository:
+------------------------------------------------------------------------
 
-   git clone https://github.com/alexkuznecov16/ToDo-App.git
-   cd todo-app
+## 🚧 Roadmap (Coming Soon)
 
-2. Install dependencies:
+-   [ ] 🔄 Drag & Drop: Native interactive reordering\
+-   [ ] 🌙 Dark Mode: Optimized UI for late-night deep work\
+-   [ ] 🔔 Deadlines 2.0: Email and Browser push notifications\
+-   [ ] 📊 Analytics: Productivity charts and completion heatmaps
 
-   npm install
+------------------------------------------------------------------------
 
-3. Configure Supabase (src/supabase.js):
+## 👨‍💻 Author
 
-   import { createClient } from '@supabase/supabase-js'
+**Alexander Kuznetsov**\
+Full-Stack Developer \| Open-Source Contributor
 
-   const supabaseUrl = 'https://YOUR_PROJECT_ID.supabase.co'
-   const supabaseKey = 'YOUR_PUBLIC_ANON_KEY'
+-   Telegram: https://t.me/kznws111\
+-   Email: alexander.kuznecov16@gmail.com\
+-   Live Demo: https://getdone.online
 
-   export const supabase = createClient(supabaseUrl, supabaseKey)
+------------------------------------------------------------------------
 
-4. Run the project:
-
-   npm run dev
-
-
-----------------------------------------------------
-🎨 UI Highlights
-----------------------------------------------------
-
-- Sticky modern header
-- Real-time date and clock
-- Glass-style columns
-- Smooth animations
-- Fully responsive layout
-- Horizontal scroll support for multiple columns
-
-
-----------------------------------------------------
-🚧 Future Improvements
-----------------------------------------------------
-
-- Drag & Drop task reordering
-- Column drag & drop
-- Real-time updates
-- Task deadlines
-- Dark / Light theme toggle
-
-
-----------------------------------------------------
-👨‍💻 Author
-----------------------------------------------------
-
-Alexander Kuznetsov
-
-Telegram: @kznws111
-Email: alexander.kuznecov16@gmail.com
-
-
-----------------------------------------------------
-🌐 Live Website
-----------------------------------------------------
-
-https://to-do-app-murex-nine.vercel.app
-
-====================================================
+```{=html}
+<p align="center">
+```
+`<i>`{=html}"Success is the sum of small efforts, repeated day in and
+day out."`</i>`{=html}
+```{=html}
+</p>
+```

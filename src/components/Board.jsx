@@ -1,3 +1,4 @@
+import { DndContext, closestCorners } from "@dnd-kit/core"
 import { useEffect, useState } from "react"
 import { apiRequest, supabase } from "../supabase"
 import Column from "./Column"
@@ -8,6 +9,35 @@ export default function Board() {
   const [columns, setColumns] = useState([])
   const [tasks, setTasks] = useState([])
   const [userTags, setUserTags] = useState([])
+
+  async function handleDragEnd(event) {
+    const { active, over } = event
+
+    if (!over) return
+
+    const taskId = active.data.current.taskId
+    const newColumnId = over.data.current.columnId
+
+    if (!taskId || !newColumnId) return
+
+    const task = tasks.find((t) => t.id === taskId)
+
+    if (!task) return
+    if (task.column_id === newColumnId) return
+
+    setTasks((prev) =>
+      prev.map((t) => (t.id === taskId ? { ...t, column_id: newColumnId } : t))
+    )
+
+    const { error } = await apiRequest(
+      supabase.from("tasks").update({ column_id: newColumnId }).eq("id", taskId)
+    )
+
+    if (error) {
+      console.error(error)
+      await fetchData()
+    }
+  }
 
   async function fetchTags() {
     const { data } = await apiRequest(supabase.from("tags").select("*"))
@@ -69,22 +99,24 @@ export default function Board() {
   }
 
   return (
-    <div className="board">
-      {columns.map((col) => (
-        <Column
-          key={col.id}
-          column={col}
-          tasks={tasks.filter((t) => t.column_id === col.id)}
-          refresh={fetchData}
-          setTasks={setTasks}
-          userTags={userTags}
-          refreshTags={fetchTags}
-        />
-      ))}
+    <DndContext collisionDetection={closestCorners} onDragEnd={handleDragEnd}>
+      <div className="board">
+        {columns.map((col) => (
+          <Column
+            key={col.id}
+            column={col}
+            tasks={tasks.filter((t) => t.column_id === col.id)}
+            refresh={fetchData}
+            setTasks={setTasks}
+            userTags={userTags}
+            refreshTags={fetchTags}
+          />
+        ))}
 
-      <button className="add-column" onClick={addColumn}>
-        + Add Column
-      </button>
-    </div>
+        <button className="add-column" onClick={addColumn}>
+          + Add Column
+        </button>
+      </div>
+    </DndContext>
   )
 }

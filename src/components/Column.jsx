@@ -1,3 +1,5 @@
+import { useDroppable } from "@dnd-kit/core"
+import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable"
 import { useState } from "react"
 import { apiRequest, supabase } from "../supabase"
 import Task from "./Task"
@@ -13,6 +15,13 @@ export default function Column({
   const [isDeleting, setIsDeleting] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
   const [newTitle, setNewTitle] = useState(column.title)
+
+  const { setNodeRef, isOver } = useDroppable({
+    id: `column-${column.id}`,
+    data: {
+      columnId: column.id
+    }
+  })
 
   async function deleteColumn() {
     const { error } = await apiRequest(
@@ -132,16 +141,25 @@ export default function Column({
         )}
       </div>
 
-      <div className="tasks-container">
-        {tasks.map((task) => (
-          <Task
-            key={task.id}
-            task={task}
-            refresh={refresh}
-            userTags={userTags}
-            refreshTags={refreshTags}
-          />
-        ))}
+      <div
+        className="tasks-container"
+        ref={setNodeRef}
+        style={{
+          background: isOver ? "rgba(99,102,241,0.15)" : ""
+        }}>
+        <SortableContext
+          items={tasks.map((t) => t.id)}
+          strategy={verticalListSortingStrategy}>
+          {tasks.map((task) => (
+            <Task
+              key={task.id}
+              task={task}
+              refresh={refresh}
+              userTags={userTags}
+              refreshTags={refreshTags}
+            />
+          ))}
+        </SortableContext>
 
         <button onClick={addTask}>+ Add Task</button>
       </div>

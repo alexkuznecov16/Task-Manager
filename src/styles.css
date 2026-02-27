@@ -11,6 +11,13 @@
   box-sizing: border-box;
 }
 
+.drag-overlay {
+  z-index: 999999;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+  transform: rotate(4deg);
+  cursor: grabbing;
+}
+
 body.menu-open {
   overflow: hidden !important;
   position: fixed !important;

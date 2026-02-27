@@ -1,9 +1,35 @@
+import { useDraggable } from "@dnd-kit/core"
+import { CSS } from "@dnd-kit/utilities"
 import TaskModal from "./TaskModal"
 import { useState } from "react"
 import { apiRequest, supabase } from "../supabase"
 
 export default function Task({ task, refresh, userTags, refreshTags }) {
   const [showModal, setShowModal] = useState(false)
+
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging
+  } = useDraggable({
+    id: `task-${task.id}`,
+    data: {
+      taskId: task.id,
+      columnId: task.column_id
+    }
+  })
+
+  const style = {
+    transform: CSS.Translate.toString(transform),
+    transition,
+    position: isDragging ? "absolute" : "static",
+    zIndex: isDragging ? 99999999 : "auto",
+    opacity: isDragging ? 0.9 : 1,
+    cursor: isDragging ? "grabbing" : "grab"
+  }
 
   async function deleteTag(tagId) {
     const { error } = await apiRequest(
@@ -63,7 +89,12 @@ export default function Task({ task, refresh, userTags, refreshTags }) {
 
   return (
     <>
-      <div className={`task ${task.completed ? "done" : ""}`}>
+      <div
+        className={`task ${task.completed ? "done" : ""}`}
+        ref={setNodeRef}
+        style={style}
+        {...attributes}
+        {...listeners}>
         <div className="tag-indicators">
           {task.tags
             ?.split(",")

@@ -19,31 +19,32 @@ Designed with a **mobile‑first philosophy**, it delivers a seamless experience
 
 Perfect for:
 
-- Developers  
-- Students  
-- Freelancers  
-- Teams  
-- Anyone who wants to stay organized  
+- Developers
+- Students
+- Freelancers
+- Teams
+- Anyone who wants to stay organized
 
 ---
 
 ## ✨ Features
 
-- 🔐 Secure authentication (Supabase Auth)  
-- ☁️ Real‑time cloud sync  
-- 📂 Kanban workflow management  
-- 🏷 Custom tags with colors  
-- ⚡ Fast and responsive UI  
-- 🎨 Modern clean interface  
-- 🛡 Secure database with Row‑Level Security  
-- 📱 Fully responsive design  
+- 🖱 Drag & drop tasks between columns
+- 🔐 Secure authentication (Supabase Auth)
+- ☁️ Real‑time cloud sync
+- 📂 Kanban workflow management
+- 🏷 Custom tags with colors
+- ⚡ Fast and responsive UI
+- 🎨 Modern clean interface
+- 🛡 Secure database with Row‑Level Security
+- 📱 Fully responsive design
 
 ---
 
 ## 🛠 Tech Stack
 
-| Layer    | Technology       |
-|----------|------------------|
+| Layer    | Technology      |
+| -------- | --------------- |
 | Frontend | React 18 + Vite |
 | Backend  | Supabase        |
 | Database | PostgreSQL      |
@@ -59,11 +60,11 @@ GetDone uses a secure and scalable architecture powered by Supabase and PostgreS
 
 Core concepts:
 
-- Users own their own data  
-- Tasks belong to workflow columns  
-- Tags allow flexible organization  
-- Real‑time sync across devices  
-- Secure access via Row‑Level Security  
+- Users own their own data
+- Tasks belong to workflow columns
+- Tags allow flexible organization
+- Real‑time sync across devices
+- Secure access via Row‑Level Security
 
 See full schema diagram:
 
@@ -115,9 +116,9 @@ Contributions are welcome.
 
 If you'd like to improve GetDone:
 
-- Fork the repository  
-- Create a feature branch  
-- Submit a Pull Request  
+- Fork the repository
+- Create a feature branch
+- Submit a Pull Request
 
 ---
 
@@ -131,12 +132,11 @@ This project is open source and available under the MIT License.
 
 Alexander Kuznecov
 
-- Telegram: https://t.me/kznws111  
-- Email: alexander.kuznecov16@gmail.com  
+- Telegram: https://t.me/kznws111
+- Email: alexander.kuznecov16@gmail.com
 
 ---
 
 <p align="center">
   Built with passion for productivity.
 </p>
-

@@ -25,8 +25,6 @@ export default function Task({ task, refresh, userTags, refreshTags }) {
   const style = {
     transform: CSS.Translate.toString(transform),
     transition,
-    position: isDragging ? "absolute" : "static",
-    zIndex: isDragging ? 99999999 : "auto",
     opacity: isDragging ? 0.9 : 1,
     cursor: isDragging ? "grabbing" : "grab"
   }
@@ -92,9 +90,10 @@ export default function Task({ task, refresh, userTags, refreshTags }) {
       <div
         className={`task ${task.completed ? "done" : ""}`}
         ref={setNodeRef}
-        style={style}
-        {...attributes}
-        {...listeners}>
+        style={style}>
+        <div className="drag-handle" {...attributes} {...listeners}>
+          ⋮⋮
+        </div>
         <div className="tag-indicators">
           {task.tags
             ?.split(",")

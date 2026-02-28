@@ -23,8 +23,6 @@
 
 .task.done {
   opacity: 0.5;
-  text-decoration: line-through;
-  color: greenyellow;
 }
 
 .task-content {
@@ -34,7 +32,9 @@
   font-size: 15px;
 }
 
-.task-content span {
+.task.done .task-content span {
+  text-decoration: line-through;
+  color: greenyellow;
   display: block;
   white-space: nowrap;
   overflow: hidden;
@@ -68,6 +68,25 @@
   font-size: 16px;
   font-weight: 500;
   cursor: pointer;
+}
+
+.drag-handle {
+  cursor: grab;
+  padding: 4px;
+  margin-right: 6px;
+  opacity: 0.5;
+  text-decoration: none !important;
+  color: #94a3b8 !important;
+}
+
+.drag-handle:hover {
+  opacity: 1;
+  color: #cbd5f5 !important;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+  color: #e2e8f0 !important;
 }
 
 @media screen and (max-width: 800px) {

@@ -1,4 +1,4 @@
-import { DndContext, closestCorners } from "@dnd-kit/core"
+import { DndContext, closestCorners, DragOverlay } from "@dnd-kit/core"
 import { useEffect, useState } from "react"
 import { apiRequest, supabase } from "../supabase"
 import Column from "./Column"
@@ -9,9 +9,18 @@ export default function Board() {
   const [columns, setColumns] = useState([])
   const [tasks, setTasks] = useState([])
   const [userTags, setUserTags] = useState([])
+  const [activeTask, setActiveTask] = useState(null)
+
+  function handleDragStart(event) {
+    const taskId = event.active.data.current.taskId
+    const task = tasks.find((t) => t.id === taskId)
+    if (task) setActiveTask(task)
+  }
 
   async function handleDragEnd(event) {
     const { active, over } = event
+
+    setActiveTask(null)
 
     if (!over) return
 
@@ -25,6 +34,7 @@ export default function Board() {
     if (!task) return
     if (task.column_id === newColumnId) return
 
+    // optimistic update
     setTasks((prev) =>
       prev.map((t) => (t.id === taskId ? { ...t, column_id: newColumnId } : t))
     )
@@ -99,7 +109,10 @@ export default function Board() {
   }
 
   return (
-    <DndContext collisionDetection={closestCorners} onDragEnd={handleDragEnd}>
+    <DndContext
+      collisionDetection={closestCorners}
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}>
       <div className="board">
         {columns.map((col) => (
           <Column
@@ -117,6 +130,17 @@ export default function Board() {
           + Add Column
         </button>
       </div>
+
+      <DragOverlay>
+        {activeTask ? (
+          <div className="task dragging">
+            <div className="drag-handle">⋮⋮</div>
+            <div className="task-content">
+              <span>{activeTask.title}</span>
+            </div>
+          </div>
+        ) : null}
+      </DragOverlay>
     </DndContext>
   )
 }

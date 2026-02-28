@@ -1,9 +1,13 @@
 import { useEffect, useState } from "react"
 import { apiRequest, supabase } from "../supabase"
+import { useNotification } from "../hooks/useNotification"
+import EditModal from "./EditModal"
 
 export default function Header({ user }) {
   const [time, setTime] = useState(new Date())
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const addNotification = useNotification()
+  const [modalConfig, setModalConfig] = useState(null)
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -14,39 +18,31 @@ export default function Header({ user }) {
   }, [])
 
   useEffect(() => {
-    if (isMenuOpen) {
-      document.body.style.overflow = "hidden"
-    } else {
-      document.body.style.overflow = ""
-    }
+    document.body.style.overflow = isMenuOpen ? "hidden" : ""
   }, [isMenuOpen])
 
   const handleLogout = async () => {
-    await apiRequest(supabase.auth.signOut())
-  }
-
-  const editName = async () => {
-    const newName = prompt("Enter new name:", user.user_metadata?.name || "")
-    if (newName && newName !== user.user_metadata?.name) {
-      const { error } = await apiRequest(
-        supabase.auth.updateUser({
-          data: { name: newName }
-        })
-      )
-      if (error) alert(error.message)
-      else alert("Name updated!")
+    const { error } = await apiRequest(supabase.auth.signOut())
+    if (error) {
+      addNotification("Failed to sign out: " + error.message, "error")
     }
   }
 
-  const editEmail = async () => {
-    const newEmail = prompt("Enter new email:", user.email)
-    if (newEmail && newEmail !== user.email) {
+  const handleSave = async (newValue) => {
+    if (modalConfig.type === "Name") {
       const { error } = await apiRequest(
-        supabase.auth.updateUser({ email: newEmail })
+        supabase.auth.updateUser({ data: { name: newValue } })
       )
-      if (error) alert(error.message)
-      else alert("Check your new email to confirm change!")
+      if (error) addNotification("Error: " + error.message, "error")
+      else addNotification("Name updated!", "success")
+    } else {
+      const { error } = await apiRequest(
+        supabase.auth.updateUser({ email: newValue })
+      )
+      if (error) addNotification("Error: " + error.message, "error")
+      else addNotification("Check your email to confirm!", "success")
     }
+    setModalConfig(null)
   }
 
   const formattedDate = time.toLocaleDateString("en-GB")
@@ -56,24 +52,34 @@ export default function Header({ user }) {
 
   return (
     <header className="header">
+      {modalConfig && (
+        <EditModal
+          title={modalConfig.type}
+          initialValue={modalConfig.value}
+          onSave={handleSave}
+          onClose={() => setModalConfig(null)}
+        />
+      )}
       <div className="header-left">
         <h1 className="logo">GetDone App</h1>
-
         {user && (
           <div className="user-info">
             <div className="user-details">
               <span
                 className="user-name"
-                onClick={editName}
-                style={{ cursor: "pointer" }}
-                title="Click to change name">
+                onClick={() =>
+                  setModalConfig({
+                    type: "Name",
+                    value: user.user_metadata?.name || ""
+                  })
+                }>
                 {user.user_metadata?.name || "User"}
               </span>
               <span
                 className="user-email"
-                onClick={editEmail}
-                style={{ cursor: "pointer" }}
-                title="Click to change email">
+                onClick={() =>
+                  setModalConfig({ type: "Email", value: user.email })
+                }>
                 {user.email}
               </span>
             </div>
@@ -98,6 +104,7 @@ export default function Header({ user }) {
           <span></span>
         </button>
       </div>
+
       <div className={`mobile-menu ${isMenuOpen ? "active" : ""}`}>
         <button
           className="close-menu-btn"
@@ -111,9 +118,9 @@ export default function Header({ user }) {
             <path
               d="M4 12H20M20 12L14 6M20 12L14 18"
               stroke="url(#arrow-gradient)"
-              stroke-width="2.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
             <defs>
               <linearGradient
@@ -123,8 +130,8 @@ export default function Header({ user }) {
                 x2="20"
                 y2="12"
                 gradientUnits="userSpaceOnUse">
-                <stop stop-color="#6366f1" />
-                <stop offset="1" stop-color="#8b5cf6" />
+                <stop stopColor="#6366f1" />
+                <stop offset="1" stopColor="#8b5cf6" />
               </linearGradient>
             </defs>
           </svg>
@@ -141,11 +148,19 @@ export default function Header({ user }) {
 
           {user && (
             <div className="mobile-user-section">
-              <div className="user-card" onClick={editName}>
+              <div
+                className="user-card"
+                onClick={() =>
+                  setModalConfig({ type: "Name", value: user.name })
+                }>
                 <label>Name</label>
                 <span>{user.user_metadata?.name || "User"}</span>
               </div>
-              <div className="user-card" onClick={editEmail}>
+              <div
+                className="user-card"
+                onClick={() =>
+                  setModalConfig({ type: "Email", value: user.email })
+                }>
                 <label>Email</label>
                 <span>{user.email}</span>
               </div>
@@ -192,7 +207,7 @@ export default function Header({ user }) {
         </div>
         <div
           className="menu-overlay"
-          onClick={() => setIsMenuOpen(!isMenuOpen)}></div>
+          onClick={() => setIsMenuOpen(false)}></div>
       </div>
     </header>
   )

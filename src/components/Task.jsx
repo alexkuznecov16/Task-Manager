@@ -3,9 +3,11 @@ import { CSS } from "@dnd-kit/utilities"
 import TaskModal from "./TaskModal"
 import { useState } from "react"
 import { apiRequest, supabase } from "../supabase"
+import { useNotification } from "../hooks/useNotification"
 
 export default function Task({ task, refresh, userTags, refreshTags }) {
   const [showModal, setShowModal] = useState(false)
+  const addNotification = useNotification()
 
   const {
     attributes,
@@ -16,10 +18,7 @@ export default function Task({ task, refresh, userTags, refreshTags }) {
     isDragging
   } = useDraggable({
     id: `task-${task.id}`,
-    data: {
-      taskId: task.id,
-      columnId: task.column_id
-    }
+    data: { taskId: task.id, columnId: task.column_id }
   })
 
   const style = {
@@ -33,7 +32,10 @@ export default function Task({ task, refresh, userTags, refreshTags }) {
     const { error } = await apiRequest(
       supabase.from("tags").delete().eq("id", tagId)
     )
-    if (!error) {
+    if (error) {
+      addNotification("Failed to delete tag: " + error.message, "error")
+    } else {
+      addNotification("Tag deleted successfully", "success")
       await refreshTags()
     }
   }
@@ -41,33 +43,25 @@ export default function Task({ task, refresh, userTags, refreshTags }) {
   async function createTag(name, color) {
     const cleanName = name.trim().toLowerCase()
     if (!cleanName || userTags.length >= 8) return
-
     if (userTags.some((t) => t.name === cleanName)) {
-      alert("This tag has already been created")
+      addNotification("This tag already exists", "error")
       return
     }
-
     const {
       data: { user }
     } = await supabase.auth.getUser()
-
     const { error } = await apiRequest(
       supabase
         .from("tags")
         .insert([{ name: cleanName, color: color, user_id: user.id }])
     )
-
-    if (!error) {
-      await refreshTags()
+    if (error) {
+      addNotification("Failed to create tag: " + error.message, "error")
     } else {
-      alert("Error: " + error.message)
+      addNotification("Tag created successfully", "success")
+      await refreshTags()
     }
   }
-
-  const tagColors = userTags.reduce((acc, t) => {
-    acc[t.name.toLowerCase()] = t.color
-    return acc
-  }, {})
 
   async function toggleComplete() {
     await apiRequest(
@@ -81,9 +75,21 @@ export default function Task({ task, refresh, userTags, refreshTags }) {
 
   async function deleteTask() {
     if (!window.confirm("Delete this task?")) return
-    await apiRequest(supabase.from("tasks").delete().eq("id", task.id))
-    refresh()
+    const { error } = await apiRequest(
+      supabase.from("tasks").delete().eq("id", task.id)
+    )
+    if (error) {
+      addNotification("Failed to delete task: " + error.message, "error")
+    } else {
+      addNotification("Task deleted successfully", "success")
+      refresh()
+    }
   }
+
+  const tagColors = userTags.reduce((acc, t) => {
+    acc[t.name.toLowerCase()] = t.color
+    return acc
+  }, {})
 
   return (
     <>
@@ -97,25 +103,20 @@ export default function Task({ task, refresh, userTags, refreshTags }) {
         <div className="tag-indicators">
           {task.tags
             ?.split(",")
-            .filter((tag) => tag.trim() !== "")
-            .map((tag) => {
-              const normalizedTag = tag.trim().toLowerCase()
-              return (
-                <div
-                  key={tag}
-                  className="tag-bar"
-                  style={{
-                    background: tagColors[normalizedTag] || "#334155"
-                  }}
-                />
-              )
-            })}
+            .filter((t) => t.trim())
+            .map((tag) => (
+              <div
+                key={tag}
+                className="tag-bar"
+                style={{
+                  background: tagColors[tag.trim().toLowerCase()] || "#334155"
+                }}
+              />
+            ))}
         </div>
-
         <div className="task-content">
           <span onClick={() => setShowModal(true)}>{task.title}</span>
         </div>
-
         <div className="task-controls">
           <button
             className="complete-btn"
@@ -125,7 +126,6 @@ export default function Task({ task, refresh, userTags, refreshTags }) {
             }}>
             {task.completed ? "↩" : "✓"}
           </button>
-
           <button
             className="delete-btn"
             onClick={(e) => {

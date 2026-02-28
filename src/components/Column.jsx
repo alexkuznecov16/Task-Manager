@@ -3,6 +3,7 @@ import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable"
 import { useState } from "react"
 import { apiRequest, supabase } from "../supabase"
 import Task from "./Task"
+import { useNotification } from "../hooks/useNotification"
 
 export default function Column({
   column,
@@ -15,6 +16,7 @@ export default function Column({
   const [isDeleting, setIsDeleting] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
   const [newTitle, setNewTitle] = useState(column.title)
+  const addNotification = useNotification()
 
   const { setNodeRef, isOver } = useDroppable({
     id: `column-${column.id}`,
@@ -29,9 +31,9 @@ export default function Column({
     )
 
     if (error) {
-      console.error("Error deleting column:", error.message)
-      alert("Error deleting column: " + error.message)
+      addNotification("Failed to delete column: " + error.message, "error")
     } else {
+      addNotification("Column deleted successfully", "success")
       refresh()
       setIsDeleting(false)
     }
@@ -43,7 +45,7 @@ export default function Column({
     } = await supabase.auth.getUser()
 
     const newTask = {
-      id: Math.random(),
+      id: Date.now(),
       title: "New task",
       column_id: column.id,
       user_id: user.id,
@@ -53,7 +55,7 @@ export default function Column({
 
     setTasks((prev) => [...prev, newTask])
 
-    await apiRequest(
+    const { error } = await apiRequest(
       supabase.from("tasks").insert({
         title: "New task",
         column_id: column.id,
@@ -62,7 +64,12 @@ export default function Column({
         order: tasks.length
       })
     )
-    refresh()
+
+    if (error) {
+      addNotification("Failed to add task: " + error.message, "error")
+    } else {
+      refresh()
+    }
   }
 
   async function updateColumnTitle() {
@@ -76,7 +83,7 @@ export default function Column({
     )
 
     if (error) {
-      console.error("Error updating column:", error.message)
+      addNotification("Failed to update title: " + error.message, "error")
     } else {
       setIsEditing(false)
       refresh()

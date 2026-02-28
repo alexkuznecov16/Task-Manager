@@ -1,16 +1,7 @@
 import { createPortal } from "react-dom"
 import { useState } from "react"
 import { apiRequest, supabase } from "../supabase"
-
-const TAGS = [
-  { name: "work", color: "#3b82f6" },
-  { name: "home", color: "#22c55e" },
-  { name: "urgent", color: "#ef4444" },
-  { name: "money", color: "#eab308" },
-  { name: "personal", color: "#ec4899" },
-  { name: "waiting", color: "#a855f7" },
-  { name: "review", color: "#f97316" }
-]
+import { useNotification } from "../hooks/useNotification"
 
 export default function TaskModal({
   task,
@@ -28,9 +19,10 @@ export default function TaskModal({
   const [tags, setTags] = useState(
     task.tags ? task.tags.split(",").filter((t) => t !== "") : []
   )
-
   const [newTagName, setNewTagName] = useState("")
   const [newTagColor, setNewTagColor] = useState("#3b82f6")
+
+  const addNotification = useNotification()
 
   function toggleTag(tag) {
     if (tags.includes(tag)) {
@@ -46,13 +38,13 @@ export default function TaskModal({
 
     await onCreateTag(name, newTagColor)
     setNewTagName("")
+    addNotification("Tag created successfully!", "success")
   }
 
   async function save() {
     if (!task.id) return
 
     const formattedDeadline = deadline ? new Date(deadline).toISOString() : null
-
     const tagsString = tags.length > 0 ? tags.join(",") : null
 
     const { error } = await apiRequest(
@@ -68,8 +60,7 @@ export default function TaskModal({
     )
 
     if (error) {
-      console.error("Where is the error::", error.message)
-      alert("DB error: : " + error.message)
+      addNotification("Failed to save: " + error.message, "error")
       return
     }
 
@@ -81,19 +72,16 @@ export default function TaskModal({
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal" onClick={(e) => e.stopPropagation()}>
         <h2>Edit task</h2>
-
         <input
           placeholder="Title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
-
         <textarea
           placeholder="Description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
-
         <input
           type="datetime-local"
           value={deadline || ""}
@@ -134,16 +122,11 @@ export default function TaskModal({
                   }}>
                   #{tag.name}
                 </span>
-
                 <button
                   type="button"
                   onClick={(e) => {
                     e.stopPropagation()
-                    if (
-                      window.confirm(`Delete tag #${tag.name} from database?`)
-                    ) {
-                      onDeleteTag(tag.id)
-                    }
+                    onDeleteTag(tag.id)
                   }}
                   style={{
                     background: "none",

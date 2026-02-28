@@ -2,6 +2,7 @@ import { DndContext, closestCorners, DragOverlay } from "@dnd-kit/core"
 import { useEffect, useState } from "react"
 import { apiRequest, supabase } from "../supabase"
 import Column from "./Column"
+import { useNotification } from "../hooks/useNotification"
 
 const BOARD_ID = "main"
 
@@ -10,6 +11,7 @@ export default function Board() {
   const [tasks, setTasks] = useState([])
   const [userTags, setUserTags] = useState([])
   const [activeTask, setActiveTask] = useState(null)
+  const addNotification = useNotification()
 
   function handleDragStart(event) {
     const taskId = event.active.data.current.taskId
@@ -19,7 +21,6 @@ export default function Board() {
 
   async function handleDragEnd(event) {
     const { active, over } = event
-
     setActiveTask(null)
 
     if (!over) return
@@ -34,7 +35,6 @@ export default function Board() {
     if (!task) return
     if (task.column_id === newColumnId) return
 
-    // optimistic update
     setTasks((prev) =>
       prev.map((t) => (t.id === taskId ? { ...t, column_id: newColumnId } : t))
     )
@@ -44,17 +44,20 @@ export default function Board() {
     )
 
     if (error) {
-      console.error(error)
+      addNotification("Failed to move task: " + error.message, "error")
       await fetchData()
     }
   }
 
   async function fetchTags() {
-    const { data } = await apiRequest(supabase.from("tags").select("*"))
-    if (data) setUserTags(data)
+    const { data, error } = await apiRequest(supabase.from("tags").select("*"))
+    if (error) {
+      addNotification("Failed to load tags: " + error.message, "error")
+    } else if (data) {
+      setUserTags(data)
+    }
   }
 
-  // get data
   async function fetchData() {
     const {
       data: { user }
@@ -62,17 +65,21 @@ export default function Board() {
 
     if (!user) return
 
-    const { data: columnsData } = await apiRequest(
+    const { data: columnsData, error: colError } = await apiRequest(
       supabase.from("columns").select("*").eq("user_id", user.id).order("order")
     )
 
-    const { data: tasksData } = await apiRequest(
+    const { data: tasksData, error: taskError } = await apiRequest(
       supabase
         .from("tasks")
         .select("*")
         .eq("user_id", user.id)
         .order("created_at", { ascending: true })
     )
+
+    if (colError || taskError) {
+      addNotification("Failed to load board data", "error")
+    }
 
     if (columnsData) setColumns(columnsData)
     if (tasksData) setTasks(tasksData)
@@ -81,18 +88,17 @@ export default function Board() {
   }
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // add column
   async function addColumn() {
     const {
       data: { user }
     } = await supabase.auth.getUser()
     const newOrder = columns.length
 
-    const { data } = await apiRequest(
+    const { data, error } = await apiRequest(
       supabase
         .from("columns")
         .insert({
@@ -105,7 +111,11 @@ export default function Board() {
         .single()
     )
 
-    if (data) setColumns([...columns, data])
+    if (error) {
+      addNotification("Failed to add column: " + error.message, "error")
+    } else if (data) {
+      setColumns([...columns, data])
+    }
   }
 
   return (

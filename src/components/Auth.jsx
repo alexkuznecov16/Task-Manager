@@ -1,12 +1,14 @@
 import { useState } from "react"
 import { apiRequest, supabase } from "../supabase"
+import { useNotification } from "../hooks/useNotification"
 
 export default function Auth() {
   const [loading, setLoading] = useState(false)
-  const [isSignUp, setIsSignUp] = useState(false) // toggle
+  const [isSignUp, setIsSignUp] = useState(false)
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [name, setName] = useState("")
+  const addNotification = useNotification()
 
   const handleGoogleAuth = async () => {
     const { error } = await apiRequest(
@@ -18,7 +20,7 @@ export default function Auth() {
       })
     )
 
-    if (error) alert(error.message)
+    if (error) addNotification(error.message, "error")
   }
 
   const handleDiscordAuth = async () => {
@@ -31,7 +33,7 @@ export default function Auth() {
       })
     )
 
-    if (error) alert(error.message)
+    if (error) addNotification(error.message, "error")
   }
 
   const handleAuth = async (e) => {
@@ -39,7 +41,6 @@ export default function Auth() {
     setLoading(true)
 
     if (isSignUp) {
-      // Sing Up
       const { error } = await apiRequest(
         supabase.auth.signUp({
           email,
@@ -47,17 +48,22 @@ export default function Auth() {
           options: { data: { name: name } }
         })
       )
-      if (error) alert(error.message)
-      else alert("Registration successful! Please check your email.")
+      if (error) {
+        addNotification(error.message, "error")
+      } else {
+        addNotification(
+          "Registration successful! Please check your email.",
+          "success"
+        )
+      }
     } else {
-      // Login
       const { error } = await apiRequest(
         supabase.auth.signInWithPassword({
           email,
           password
         })
       )
-      if (error) alert(error.message)
+      if (error) addNotification(error.message, "error")
     }
     setLoading(false)
   }

@@ -13,12 +13,12 @@ export default function EditModal({ title, initialValue, onSave, onClose }) {
           onChange={(e) => setValue(e.target.value)}
         />
         <div className="edit-modal-actions">
-          <button onClick={onClose} className="cancel-btn">
+          <button onClick={onClose} className="cancel-btn cancel-btn-colors">
             Cancel
           </button>
           <button
             onClick={() => onSave(value)}
-            className="save-btn"
+            className="save-btn save-btn-colors"
             disabled={!value.trim()}>
             Save
           </button>

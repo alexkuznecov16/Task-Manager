@@ -136,6 +136,13 @@
   line-height: 1.5;
 }
 
+.deleting-modal-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 30px;
+}
+
 .deleting-modal-content button {
   margin: 10px;
   padding: 10px 20px;
@@ -145,17 +152,4 @@
   font-weight: bold;
   transition: opacity 0.2s;
   color: #fff;
-}
-
-.deleting-modal-content button:first-of-type {
-  background-color: #e74c3c;
-}
-
-.deleting-modal-content button:last-of-type {
-  background-color: #ecf0f1;
-  color: #2c3e50;
-}
-
-.deleting-modal-content button:hover {
-  opacity: 0.8;
 }

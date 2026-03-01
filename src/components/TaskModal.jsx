@@ -173,11 +173,11 @@ export default function TaskModal({
         </div>
 
         <div style={{ display: "flex", gap: "10px", marginTop: "20px" }}>
-          <button onClick={save}>Save Changes</button>
-          <button
-            onClick={onClose}
-            style={{ background: "#ef4444", color: "#fff" }}>
+          <button onClick={onClose} className="cancel-btn-colors">
             Cancel
+          </button>
+          <button onClick={save} className="save-btn-colors">
+            Save
           </button>
         </div>
       </div>

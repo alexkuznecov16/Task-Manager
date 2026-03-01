@@ -12,6 +12,16 @@
   box-sizing: border-box;
 }
 
+.cancel-btn-colors {
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: #94a3b8 !important;
+}
+
+.save-btn-colors {
+  background: linear-gradient(90deg, #6366f1, #8b5cf6) !important;
+  color: white !important;
+}
+
 .drag-overlay {
   z-index: 999999;
   box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);

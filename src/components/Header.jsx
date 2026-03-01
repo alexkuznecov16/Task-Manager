@@ -97,15 +97,23 @@ export default function Header({ user }) {
         </div>
 
         <button
-          className={`burger-menu ${isMenuOpen ? "open" : ""}`}
-          onClick={() => setIsMenuOpen(!isMenuOpen)}>
-          <span></span>
-          <span></span>
-          <span></span>
+          className="settings-btn desktop-only"
+          onClick={() => setIsMenuOpen(true)}>
+          ⚙
         </button>
+
+        {!isMenuOpen && (
+          <button
+            className="burger-menu mobile-only"
+            onClick={() => setIsMenuOpen(true)}>
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+        )}
       </div>
 
-      <div className={`mobile-menu ${isMenuOpen ? "active" : ""}`}>
+      <div className={`settings-menu ${isMenuOpen ? "active" : ""}`}>
         <button
           className="close-menu-btn"
           onClick={() => setIsMenuOpen(!isMenuOpen)}>

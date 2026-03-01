@@ -107,12 +107,20 @@ export default function Column({
               Are you sure you want to delete the "{column.title}" column and
               all its tasks?
             </h3>
-            <button type="button" onClick={deleteColumn}>
-              Delete
-            </button>
-            <button type="button" onClick={() => setIsDeleting(false)}>
-              No
-            </button>
+            <div className="deleting-modal-buttons">
+              <button
+                type="button"
+                onClick={deleteColumn}
+                className="save-btn-colors">
+                Delete
+              </button>
+              <button
+                type="button"
+                onClick={() => setIsDeleting(false)}
+                className="cancel-btn-colors">
+                Cancel
+              </button>
+            </div>
           </div>
         </div>
       )}

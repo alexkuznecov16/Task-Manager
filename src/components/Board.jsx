@@ -1,4 +1,12 @@
-import { DndContext, closestCorners, DragOverlay } from "@dnd-kit/core"
+import {
+  DndContext,
+  closestCorners,
+  DragOverlay,
+  PointerSensor,
+  TouchSensor,
+  useSensor,
+  useSensors
+} from "@dnd-kit/core"
 import { useEffect, useState } from "react"
 import { apiRequest, supabase } from "../supabase"
 import Column from "./Column"
@@ -12,6 +20,20 @@ export default function Board() {
   const [userTags, setUserTags] = useState([])
   const [activeTask, setActiveTask] = useState(null)
   const addNotification = useNotification()
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8
+      }
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 180,
+        tolerance: 6
+      }
+    })
+  )
 
   function handleDragStart(event) {
     const taskId = event.active.data.current.taskId
@@ -120,6 +142,7 @@ export default function Board() {
 
   return (
     <DndContext
+      sensors={sensors}
       collisionDetection={closestCorners}
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}>

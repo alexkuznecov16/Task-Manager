@@ -71,6 +71,7 @@
 }
 
 .drag-handle {
+  touch-action: none;
   cursor: grab;
   padding: 4px;
   margin-right: 6px;

@@ -4,6 +4,7 @@ import { useState } from "react"
 import { apiRequest, supabase } from "../supabase"
 import Task from "./Task"
 import { useNotification } from "../hooks/useNotification"
+import { useBoard } from "../context/BoardContext"
 
 export default function Column({
   column,
@@ -16,6 +17,7 @@ export default function Column({
   const [isDeleting, setIsDeleting] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
   const [newTitle, setNewTitle] = useState(column.title)
+  const { addTask } = useBoard()
   const addNotification = useNotification()
 
   const { setNodeRef, isOver } = useDroppable({
@@ -39,38 +41,38 @@ export default function Column({
     }
   }
 
-  async function addTask() {
-    const {
-      data: { user }
-    } = await supabase.auth.getUser()
+  // async function addTask() {
+  //   const {
+  //     data: { user }
+  //   } = await supabase.auth.getUser()
 
-    const newTask = {
-      id: Date.now(),
-      title: "New task",
-      column_id: column.id,
-      user_id: user.id,
-      completed: false,
-      order: tasks.length
-    }
+  //   const newTask = {
+  //     id: Date.now(),
+  //     title: "New task",
+  //     column_id: column.id,
+  //     user_id: user.id,
+  //     completed: false,
+  //     order: tasks.length
+  //   }
 
-    setTasks((prev) => [...prev, newTask])
+  //   setTasks((prev) => [...prev, newTask])
 
-    const { error } = await apiRequest(
-      supabase.from("tasks").insert({
-        title: "New task",
-        column_id: column.id,
-        user_id: user.id,
-        completed: false,
-        order: tasks.length
-      })
-    )
+  //   const { error } = await apiRequest(
+  //     supabase.from("tasks").insert({
+  //       title: "New task",
+  //       column_id: column.id,
+  //       user_id: user.id,
+  //       completed: false,
+  //       order: tasks.length
+  //     })
+  //   )
 
-    if (error) {
-      addNotification("Failed to add task: " + error.message, "error")
-    } else {
-      refresh()
-    }
-  }
+  //   if (error) {
+  //     addNotification("Failed to add task: " + error.message, "error")
+  //   } else {
+  //     refresh()
+  //   }
+  // }
 
   async function updateColumnTitle() {
     if (newTitle.trim() === "" || newTitle === column.title) {
@@ -174,7 +176,7 @@ export default function Column({
           ))}
         </SortableContext>
 
-        <button onClick={addTask}>+ Add Task</button>
+        <button onClick={() => addTask(column.id)}>+ Add Task</button>
       </div>
     </div>
   )

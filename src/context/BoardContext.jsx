@@ -165,6 +165,16 @@ export function BoardProvider({ children }) {
     if (error) addNotification(error.message, "error")
   }
 
+  async function updateTask(taskId, updates) {
+    setTasks((prev) =>
+      prev.map((t) => (t.id === taskId ? { ...t, ...updates } : t))
+    )
+    const { error } = await apiRequest(
+      supabase.from("tasks").update(updates).eq("id", taskId)
+    )
+    if (error) addNotification(error.message, "error")
+  }
+
   // === TAGS ===
   async function fetchTags(userId) {
     const { data, error } = await apiRequest(
@@ -185,9 +195,12 @@ export function BoardProvider({ children }) {
       supabase
         .from("tags")
         .insert([{ name: cleanName, color, user_id: user.id }])
+        .select()
     )
-    if (error) addNotification(error.message, "error")
-    else setTags((prev) => [...prev, data[0]])
+    if (error) throw new Error(error.message)
+    const newTag = data[0]
+    setTags((prev) => [...prev, newTag])
+    return newTag // <- важно вернуть
   }
 
   async function deleteTag(tagId) {
@@ -217,6 +230,7 @@ export function BoardProvider({ children }) {
         deleteTask,
         moveTask,
         toggleTaskComplete,
+        updateTask,
 
         // tags
         createTag,

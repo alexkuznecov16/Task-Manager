@@ -1,16 +1,11 @@
 import { createPortal } from "react-dom"
 import { useState } from "react"
-import { apiRequest, supabase } from "../supabase"
+import { useBoard } from "../context/BoardContext"
 import { useNotification } from "../hooks/useNotification"
 
-export default function TaskModal({
-  task,
-  refresh,
-  onClose,
-  userTags,
-  onCreateTag,
-  onDeleteTag
-}) {
+export default function TaskModal({ task, userTags, onDeleteTag, onClose }) {
+  const addNotification = useNotification()
+  const { updateTask, createTag } = useBoard()
   const [title, setTitle] = useState(task.title)
   const [description, setDescription] = useState(task.description || "")
   const [deadline, setDeadline] = useState(
@@ -22,49 +17,31 @@ export default function TaskModal({
   const [newTagName, setNewTagName] = useState("")
   const [newTagColor, setNewTagColor] = useState("#3b82f6")
 
-  const addNotification = useNotification()
-
   function toggleTag(tag) {
-    if (tags.includes(tag)) {
-      setTags(tags.filter((t) => t !== tag))
-    } else {
-      setTags([...tags, tag])
-    }
-  }
-
-  async function handleAddNewTag() {
-    const name = newTagName.trim().toLowerCase()
-    if (!name) return
-
-    await onCreateTag(name, newTagColor)
-    setNewTagName("")
-    addNotification("Tag created successfully!", "success")
+    setTags((prev) =>
+      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
+    )
   }
 
   async function save() {
-    if (!task.id) return
-
-    const formattedDeadline = deadline ? new Date(deadline).toISOString() : null
-    const tagsString = tags.length > 0 ? tags.join(",") : null
-
-    const { error } = await apiRequest(
-      supabase
-        .from("tasks")
-        .update({
-          title: title.trim(),
-          description: description,
-          deadline: formattedDeadline,
-          tags: tagsString
-        })
-        .eq("id", task.id)
-    )
-
-    if (error) {
-      addNotification("Failed to save: " + error.message, "error")
-      return
+    let isoDeadline = null
+    if (deadline) {
+      const d = new Date(deadline)
+      if (isNaN(d)) {
+        alert("Invalid date")
+        return
+      }
+      isoDeadline = d.toISOString()
     }
 
-    refresh()
+    const updates = {
+      title: title.trim(),
+      description,
+      deadline: isoDeadline,
+      tags: tags.length > 0 ? tags.join(",") : null
+    }
+
+    await updateTask(task.id, updates)
     onClose()
   }
 
@@ -127,6 +104,7 @@ export default function TaskModal({
                   onClick={(e) => {
                     e.stopPropagation()
                     onDeleteTag(tag.id)
+                    setTags((prev) => prev.filter((t) => t !== tag.name))
                   }}
                   style={{
                     background: "none",
@@ -165,7 +143,24 @@ export default function TaskModal({
                 value={newTagColor}
                 onChange={(e) => setNewTagColor(e.target.value)}
               />
-              <button type="button" onClick={handleAddNewTag}>
+              <button
+                type="button"
+                onClick={async () => {
+                  const name = newTagName.trim().toLowerCase()
+                  if (!name || tags.length >= 8) return
+                  try {
+                    // eslint-disable-next-line no-unused-vars
+                    const { id, color } = await createTag(name, newTagColor)
+
+                    setTags((prev) => [...prev, name])
+                    setNewTagName("")
+                  } catch (err) {
+                    addNotification(
+                      "Failed to create tag:" + err.message,
+                      "error"
+                    )
+                  }
+                }}>
                 +
               </button>
             </div>

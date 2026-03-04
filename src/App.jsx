@@ -12,12 +12,10 @@ function App() {
   const { events } = useScrollOnDrag(wrapperRef)
 
   useEffect(() => {
-    // 1. Проверяем сессию при загрузке страницы
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session)
     })
 
-    // 2. Подписываемся на изменения (вход/выход)
     const {
       data: { subscription }
     } = supabase.auth.onAuthStateChange((_event, session) => {

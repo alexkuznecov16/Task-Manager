@@ -1,24 +1,14 @@
 import { useDroppable } from "@dnd-kit/core"
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable"
 import { useState } from "react"
-import { apiRequest, supabase } from "../supabase"
 import Task from "./Task"
-import { useNotification } from "../hooks/useNotification"
 import { useBoard } from "../context/BoardContext"
 
-export default function Column({
-  column,
-  tasks,
-  refresh,
-  setTasks,
-  userTags,
-  refreshTags
-}) {
+export default function Column({ column, tasks, userTags }) {
   const [isDeleting, setIsDeleting] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
   const [newTitle, setNewTitle] = useState(column.title)
-  const { addTask } = useBoard()
-  const addNotification = useNotification()
+  const { addTask, deleteColumn, updateColumnTitle } = useBoard()
 
   const { setNodeRef, isOver } = useDroppable({
     id: `column-${column.id}`,
@@ -27,78 +17,23 @@ export default function Column({
     }
   })
 
-  async function deleteColumn() {
-    const { error } = await apiRequest(
-      supabase.from("columns").delete().eq("id", column.id)
-    )
-
-    if (error) {
-      addNotification("Failed to delete column: " + error.message, "error")
-    } else {
-      addNotification("Column deleted successfully", "success")
-      refresh()
-      setIsDeleting(false)
-    }
-  }
-
-  // async function addTask() {
-  //   const {
-  //     data: { user }
-  //   } = await supabase.auth.getUser()
-
-  //   const newTask = {
-  //     id: Date.now(),
-  //     title: "New task",
-  //     column_id: column.id,
-  //     user_id: user.id,
-  //     completed: false,
-  //     order: tasks.length
-  //   }
-
-  //   setTasks((prev) => [...prev, newTask])
-
-  //   const { error } = await apiRequest(
-  //     supabase.from("tasks").insert({
-  //       title: "New task",
-  //       column_id: column.id,
-  //       user_id: user.id,
-  //       completed: false,
-  //       order: tasks.length
-  //     })
-  //   )
-
-  //   if (error) {
-  //     addNotification("Failed to add task: " + error.message, "error")
-  //   } else {
-  //     refresh()
-  //   }
-  // }
-
-  async function updateColumnTitle() {
+  async function handleUpdateTitle() {
     if (newTitle.trim() === "" || newTitle === column.title) {
       setIsEditing(false)
       return
     }
 
-    const { error } = await apiRequest(
-      supabase.from("columns").update({ title: newTitle }).eq("id", column.id)
-    )
-
-    if (error) {
-      addNotification("Failed to update title: " + error.message, "error")
-    } else {
-      setIsEditing(false)
-      refresh()
-    }
+    await updateColumnTitle(column.id, newTitle)
+    setIsEditing(false)
   }
 
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter") updateColumnTitle()
-    if (e.key === "Escape") {
-      setNewTitle(column.title)
-      setIsEditing(false)
-    }
-  }
+  // const handleKeyDown = (e) => {
+  //   if (e.key === "Enter") updateColumnTitle()
+  //   if (e.key === "Escape") {
+  //     setNewTitle(column.title)
+  //     setIsEditing(false)
+  //   }
+  // }
 
   return (
     <div className="column">
@@ -111,7 +46,10 @@ export default function Column({
             </h3>
             <button
               type="button"
-              onClick={deleteColumn}
+              onClick={() => {
+                deleteColumn(column.id)
+                setIsDeleting(false)
+              }}
               className="save-btn-colors">
               Delete
             </button>
@@ -143,8 +81,14 @@ export default function Column({
             className="edit-column-input"
             value={newTitle}
             onChange={(e) => setNewTitle(e.target.value)}
-            onBlur={updateColumnTitle}
-            onKeyDown={handleKeyDown}
+            onBlur={handleUpdateTitle}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") handleUpdateTitle()
+              if (e.key === "Escape") {
+                setNewTitle(column.title)
+                setIsEditing(false)
+              }
+            }}
             autoFocus
           />
         ) : (
@@ -166,13 +110,7 @@ export default function Column({
           items={tasks.map((t) => t.id)}
           strategy={verticalListSortingStrategy}>
           {tasks.map((task) => (
-            <Task
-              key={task.id}
-              task={task}
-              refresh={refresh}
-              userTags={userTags}
-              refreshTags={refreshTags}
-            />
+            <Task key={task.id} task={task} userTags={userTags} />
           ))}
         </SortableContext>
 

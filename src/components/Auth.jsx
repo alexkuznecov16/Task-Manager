@@ -1,71 +1,40 @@
 import { useState } from "react"
-import { apiRequest, supabase } from "../supabase"
+import { useBoard } from "../context/BoardContext"
 import { useNotification } from "../hooks/useNotification"
 
 export default function Auth() {
+  const addNotification = useNotification()
   const [loading, setLoading] = useState(false)
   const [isSignUp, setIsSignUp] = useState(false)
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [name, setName] = useState("")
-  const addNotification = useNotification()
+  const { signInWithPassword, signUp, signInWithGoogle, signInWithDiscord } =
+    useBoard()
 
   const handleGoogleAuth = async () => {
-    const { error } = await apiRequest(
-      supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo: window.location.origin
-        }
-      })
-    )
-
-    if (error) addNotification(error.message, "error")
+    await signInWithGoogle()
   }
 
   const handleDiscordAuth = async () => {
-    const { error } = await apiRequest(
-      supabase.auth.signInWithOAuth({
-        provider: "discord",
-        options: {
-          redirectTo: window.location.origin
-        }
-      })
-    )
-
-    if (error) addNotification(error.message, "error")
+    await signInWithDiscord()
   }
 
   const handleAuth = async (e) => {
     e.preventDefault()
     setLoading(true)
 
-    if (isSignUp) {
-      const { error } = await apiRequest(
-        supabase.auth.signUp({
-          email,
-          password,
-          options: { data: { name: name } }
-        })
-      )
-      if (error) {
-        addNotification(error.message, "error")
+    try {
+      if (isSignUp) {
+        await signUp(email, password, name)
       } else {
-        addNotification(
-          "Registration successful! Please check your email.",
-          "success"
-        )
+        await signInWithPassword(email, password)
       }
-    } else {
-      const { error } = await apiRequest(
-        supabase.auth.signInWithPassword({
-          email,
-          password
-        })
-      )
-      if (error) addNotification(error.message, "error")
+    } catch (err) {
+      addNotification(err, "error")
+    } finally {
+      setLoading(false)
     }
-    setLoading(false)
   }
 
   return (
@@ -126,7 +95,9 @@ export default function Auth() {
             <span>All your data is encrypted and secured by Supabase DB</span>
           </div>
           <div className="socials_auth_container">
-            <div className="google-auth-card" onClick={handleGoogleAuth}>
+            <div
+              className="google-auth-card"
+              onClick={!loading ? handleGoogleAuth : undefined}>
               <svg
                 className="google-icon"
                 xmlns="http://www.w3.org/2000/svg"
@@ -152,7 +123,9 @@ export default function Auth() {
               </svg>
               <span>Google</span>
             </div>
-            <div className="discord-auth-card" onClick={handleDiscordAuth}>
+            <div
+              className="discord-auth-card"
+              onClick={!loading ? handleDiscordAuth : undefined}>
               <svg
                 className="discord-icon"
                 xmlns="http://www.w3.org/2000/svg"

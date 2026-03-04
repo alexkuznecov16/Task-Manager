@@ -16,6 +16,19 @@ export function BoardProvider({ children }) {
   // === INIT ===
   useEffect(() => {
     init()
+
+    const {
+      data: { subscription }
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      if (session?.user) {
+        setUser(session.user)
+        init()
+      } else {
+        setUser(null)
+      }
+    })
+
+    return () => subscription.unsubscribe()
   }, [])
 
   async function init() {
@@ -41,6 +54,79 @@ export function BoardProvider({ children }) {
       fetchTags(user.id)
     ])
     setLoading(false)
+  }
+
+  // === AUTH ===
+  async function signInWithPassword(email, password) {
+    const { data, error } = await apiRequest(
+      supabase.auth.signInWithPassword({ email, password })
+    )
+
+    if (error) {
+      addNotification(error.message, "error")
+      return { error }
+    }
+
+    setUser(data.user)
+    await init()
+    return { data }
+  }
+
+  async function signUp(email, password, name) {
+    const { data, error } = await apiRequest(
+      supabase.auth.signUp({
+        email,
+        password,
+        options: { data: { name } }
+      })
+    )
+
+    if (error) {
+      addNotification(error.message, "error")
+      return { error }
+    }
+
+    addNotification(
+      "Registration successful! Please check your email.",
+      "success"
+    )
+
+    return { data }
+  }
+
+  async function signInWithGoogle() {
+    const { error } = await apiRequest(
+      supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: { redirectTo: window.location.origin }
+      })
+    )
+
+    if (error) addNotification(error.message, "error")
+  }
+
+  async function signInWithDiscord() {
+    const { error } = await apiRequest(
+      supabase.auth.signInWithOAuth({
+        provider: "discord",
+        options: { redirectTo: window.location.origin }
+      })
+    )
+
+    if (error) addNotification(error.message, "error")
+  }
+
+  async function signOut() {
+    const { error } = await apiRequest(supabase.auth.signOut())
+    if (error) {
+      addNotification(error.message, "error")
+      return
+    }
+
+    setUser(null)
+    setColumns([])
+    setTasks([])
+    setTags([])
   }
 
   // === COLUMNS ===
@@ -219,6 +305,13 @@ export function BoardProvider({ children }) {
         tasks,
         tags,
         loading,
+
+        // auth
+        signInWithPassword,
+        signUp,
+        signInWithGoogle,
+        signInWithDiscord,
+        signOut,
 
         // columns
         addColumn,
